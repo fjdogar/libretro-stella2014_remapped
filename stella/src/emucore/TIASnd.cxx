@@ -337,31 +337,55 @@ void TIASound::process(Int16* buffer, uInt32 samples)
     switch(myChannelMode)
     {
       case Hardware2Mono:  // mono sampling with 2 hardware channels
+#if !defined(SF2000)
         while((samples > 0) && (myOutputCounter >= 31400))
+#else
+        while((samples > 0) && (myOutputCounter >= 22050))
+#endif
         {
           Int16 byte = v0 + v1;
           *(buffer++) = byte;
           *(buffer++) = byte;
+#if !defined(SF2000)
           myOutputCounter -= 31400;
+#else
+          myOutputCounter -= 22050;
+#endif
           samples--;
         }
         break;
 
       case Hardware2Stereo:  // stereo sampling with 2 hardware channels
+#if !defined(SF2000)
         while((samples > 0) && (myOutputCounter >= 31400))
+#else
+        while((samples > 0) && (myOutputCounter >= 22050))
+#endif
         {
           *(buffer++) = v0;
           *(buffer++) = v1;
+#if !defined(SF2000)
           myOutputCounter -= 31400;
+#else
+          myOutputCounter -= 22050;
+#endif
           samples--;
         }
         break;
 
       case Hardware1:  // mono/stereo sampling with only 1 hardware channel
+#if !defined(SF2000)
         while((samples > 0) && (myOutputCounter >= 31400))
+#else
+        while((samples > 0) && (myOutputCounter >= 22050))
+#endif
         {
           *(buffer++) = v0 + v1;
+#if !defined(SF2000)
           myOutputCounter -= 31400;
+#else
+          myOutputCounter -= 22050;
+#endif
           samples--;
         }
         break;

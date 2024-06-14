@@ -64,7 +64,11 @@ void Sound::open()
   }
 
   // Now initialize the TIASound object which will actually generate sound
+  #if !defined(SF2000)
   myTIASound.outputFrequency(31400);
+#else
+  myTIASound.outputFrequency(22050);
+#endif
   myTIASound.channels(2, myNumChannels == 2);
 
   // Adjust volume to that defined in settings
@@ -172,7 +176,11 @@ void Sound::set(uInt16 addr, uInt8 value, Int32 cycle)
 void Sound::processFragment(Int16* stream, uInt32 length)
 {
     const uInt32 channels = 2;
+#if !defined(SF2000)
     double streamLengthInSecs = (double)length/(double)31400;
+#else
+    double streamLengthInSecs = (double)length/(double)22050;
+#endif
     double excessStreamSecs = myRegWriteQueue.duration() - streamLengthInSecs;
     if(excessStreamSecs > 0.0)
     {
@@ -212,7 +220,11 @@ void Sound::processFragment(Int16* stream, uInt32 length)
       RegWrite& info = myRegWriteQueue.front();
 
       // How long will the remaining samples in the fragment take to play
+#if !defined(SF2000)
       double duration = remaining / (double)31400;
+#else
+      double duration = remaining / (double)22050;
+#endif
 
       // Does the register update occur before the end of the fragment?
       if(info.delta <= duration)
@@ -223,7 +235,11 @@ void Sound::processFragment(Int16* stream, uInt32 length)
         {
           // Process the fragment upto the next TIA register write.  We
           // round the count passed to process up if needed.
+#if !defined(SF2000)
           double samples = (31400 * info.delta);
+#else
+          double samples = (22050 * info.delta);
+#endif
           myTIASound.process(stream + ((uInt32)position * channels),
               (uInt32)samples + (uInt32)(position + samples) - 
               ((uInt32)position + (uInt32)samples));

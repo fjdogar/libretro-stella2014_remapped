@@ -1015,7 +1015,11 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    memset(info, 0, sizeof(*info));
    info->timing.fps            = console->getFramerate();
+#if !defined(SF2000)
    info->timing.sample_rate    = 31400;
+#else
+   info->timing.sample_rate    = 22050;
+#endif
    info->geometry.base_width   = 160 * 2;
    info->geometry.base_height  = videoHeight;
    info->geometry.max_width    = 320;
@@ -1336,7 +1340,11 @@ void retro_run(void)
 {
    static int16_t sampleBuffer[2048];
    //Get the number of samples in a frame
+#if !defined(SF2000)
    static uint32_t tiaSamplesPerFrame = (uint32_t)(31400.0f/console->getFramerate());
+#else
+   static uint32_t tiaSamplesPerFrame = (uint32_t)(22050.0f/console->getFramerate());
+#endif
 
    //CORE OPTIONS
    bool updated = false;

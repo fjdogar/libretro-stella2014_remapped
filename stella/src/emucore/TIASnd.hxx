@@ -38,7 +38,11 @@ class TIASound
     /**
       Create a new TIA Sound object using the specified output frequency
     */
+#if !defined(SF2000)
     TIASound(Int32 outputFrequency = 31400);
+#else
+    TIASound(Int32 outputFrequency = 22050);
+#endif
 
     /**
       Destructor

@@ -42,7 +42,11 @@ Settings::Settings(OSystem* osystem)
 
   // Sound options
   setInternal("sound", "true");
+#if !defined(SF2000)
   setInternal("freq", "31400");
+#else
+  setInternal("freq", "22050");
+#endif
   setInternal("volume", "100");
 
   // Input event options
